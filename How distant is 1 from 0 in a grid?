@@ -19,50 +19,42 @@ There is at least one 0 in mat. */
 class Solution {
 public:
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+
+        int m = mat.size();
+        int n = mat[0].size();
         
-         
-          int m=mat.size();
-          int n=mat[0].size();
-           vector<vector<int>> distance(m,vector<int>(n,0));
-          vector<vector<int>> visited(m,vector<int>(n,0));
-          queue<pair<pair<int,int>,int>> q;
-          int d=0;
+        queue<pair<int, int>> q;
+        vector<vector<int>> dist(m, vector<int>(n, -1));
 
-          for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
 
-                if(mat[i][j]==0){
-                    q.push({{i,j},d});
-                    visited[i][j]=1;
-                }
-                else{
-                    visited[i][j]=0;
+                if (mat[i][j] == 0) {
+                    q.push({i, j});
+                    dist[i][j] = 0;
                 }
             }
-          }
-          int delrow[4]={-1,0,+1,0};
-          int delcol[4]={0,+1,0,-1};
+        }
 
-          while(!q.empty()){
-            int row=q.front().first.first;
-            int col=q.front().first.second;
-            int d=q.front().second;
+        int delrow[4] = {-1, 0, +1, 0};
+        int delcol[4] = {0, +1, 0, -1};
+
+        while (!q.empty()) {
+            int row = q.front().first;
+            int col = q.front().second;
             q.pop();
-            distance[row][col]=d;
 
-            for(int i=0;i<4;i++){
-                int nrow=row+delrow[i];
-                int ncol=col+delcol[i];
+            for (int i = 0; i < 4; i++) {
+                int nrow = row + delrow[i];
+                int ncol = col + delcol[i];
 
-                if(nrow>=0 && nrow<=m && ncol>=0 && ncol<=n && visited[nrow][ncol]==0 &&mat[nrow][ncol]==1 ){
-                    q.push({{nrow,ncol},d+1});
-
+                if (nrow >= 0 && nrow < m && ncol >= 0 && ncol < n &&
+                    dist[nrow][ncol] == -1) {
+                    dist[nrow][ncol] = dist[row][col] + 1;
+                    q.push({nrow, ncol});
                 }
-             
             }
-
-          }
-            return distance;
-          
+        }
+        return dist;
     }
 };
